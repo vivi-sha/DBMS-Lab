@@ -1,0 +1,58 @@
+create table PERSON(driver_id varchar(20), driver_name varchar(20),driver_address varchar(20));
+Create table CAR( reg_num varchar(20),model varchar(20), year int, primary key(reg_num));
+Create table ACCIDENT(report_num int, accident_date date, location varchar(20),primary key(report_num));
+alter table PERSON ADD PRIMARY KEY(driver_id);
+create table OWNS(driver_id varchar(20),reg_num varchar(20), primary key(driver_id, reg_num), foreign key(driver_id) references PERSON(driver_id), foreign key(reg_num) references CAR(reg_num));
+create table PARTICIPATED(driver_id varchar(20),reg_num varchar(20), report_num int, damage_amount int, foreign key(driver_id) references PERSON(driver_id), foreign key(reg_num) references CAR(reg_num),foreign key(report_num) references ACCIDENT(report_num));
+
+INSERT into PERSON VALUES("A01","Richard","Srinivas nagar"); 
+INSERT into PERSON VALUES("A02","Pradeep","Rajaji nagar");
+INSERT into PERSON VALUES("A03","Smith","Ashok nagar");
+INSERT into PERSON VALUES("A04","Venu","N R Colony");
+INSERT into PERSON VALUES("A05","Jhon","Hanumanth nagar");
+
+ALTER TAble PARTICIPATED ADD PRIMARY KEY (driver_id,reg_num,report_num);
+
+insert into accident values (11, '2003-01-01',"Mysore Road");
+insert into accident values (12,'2004-02-02',"South end Circle");
+insert INTO ACCIDENT VALUES(13,'2003-01-21',"Bull Temple Road");
+insert INTO ACCIDENT VALUES(14,'2008-02-17',"Mysore Road");
+insert INTO ACCIDENT VALUES(15,'2004-03-05',"Kanakpura Road");
+
+insert into CAR VALUES("KA052250","INDICA",1990);
+insert into CAR VALUES("KA031181","LANCER",1957);
+insert into CAR VALUES("KA095477","TOYOTA",1998);
+insert into CAR VALUES("KA053408","HONDA",2008);
+insert into CAR VALUES("KA041702","AUDI",2005);
+
+insert INTO OWNS VALUES("A01","KA052250");
+INSERT INTO OWNS VALUES("A02","KA031181");
+INSERT INTO OWNS VALUES("A03","KA095477");
+INSERT INTO OWNS VALUES("A04","KA053408");
+INSERT INTO OWNS VALUES("A05","KA041702");
+
+insert INTO PARTICIPATED VALUES("A01","KA052250",11,10000);
+INSERT INTO PARTICIPATED VALUES("A02","KA031181",12,50000);
+INSERT INTO PARTICIPATED VALUES("A03","KA095477",13,25000);
+INSERT INTO PARTICIPATED VALUES("A04","KA053408",14,3000);
+INSERT INTO PARTICIPATED VALUES("A05","KA041702",15,5000);
+
+update PARTICIPATED set reg_num="KA053408" where report_num=12;
+update PARTICIPATED set reg_num="KA031181" where report_num=14;
+
+-- Week 1 Queries --
+
+update PARTICIPATED set damage_amount=25000 where report_num=12 and reg_num="KA053408";
+select driver_ID from PARTICIPATED where damage_amount>=25000;
+
+
+-- Week 2 Queries -- 
+SELECT * FROM PARTICIPATED ORDER BY DAMAGE_AMOUNT DESC;
+
+SELECT AVG(DAMAGE_AMOUNT) FROM PARTICIPATED;
+
+DELETE FROM PARTICIPATED WHERE DAMAGE_AMOUNTT<(SELECT AVG (DAMAGE_AMOUNT) FROM PARTICIPATED);
+
+SELECT driver_NAME FROM PERSON A, PARTICIPATED B WHERE A.DRIVER_ID = B.DRIVER_ID AND DAMAGE_AMOUNT>(SELECT AVG(DAMAGE_AMOUNT) FROM PARTICIPATED);
+
+SELECT MAX(DAMAGE_AMOUNT) FROM PARTICIPATED;
